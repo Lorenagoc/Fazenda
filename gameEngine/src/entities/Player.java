@@ -1,9 +1,9 @@
-package entities;
+ package entities;
 
-import java.awt.DisplayMode;
+//import java.awt.DisplayMode;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.util.Display;
+//import org.lwjgl.util.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TextureModel;
@@ -12,8 +12,8 @@ import renderEngine.DisplayManager;
 public class Player extends Entity{
 	
 	private static final float RUN_SPEED = 20;
-	private static final float TURN_SPEED = 160;
-	private static float GRAVITY = -50;
+	private static final float TURN_SPEED = 120;
+	private static float GRAVITY = -60;
 	private static final float JUMP_POWER = 30;
 	
 	private static final float TERRAIN_HEIGHT = 0;
@@ -48,11 +48,28 @@ public class Player extends Entity{
 	public void moveAuto() {
 		
 		automate();
+		//double initial = System.currentTimeMillis();
 		super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
 		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
 		super.increasePosition(dx, 0, dz);
+		this.autojump();
+	
+	}
+	
+	private void jump() {
+		if(!inAir) {
+			this.upwardsSpeed = JUMP_POWER;
+			inAir = true;
+		}
+	}
+	
+	private void autojump() {
+		if(!inAir) {
+			this.upwardsSpeed = JUMP_POWER;
+			inAir = true;
+		}
 		upwardsSpeed = upwardsSpeed + GRAVITY * DisplayManager.getFrameTimeSeconds();
 		super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		if(super.getPosition().y < TERRAIN_HEIGHT) {
@@ -63,17 +80,7 @@ public class Player extends Entity{
 		
 	}
 	
-	
-	
-	private void jump() {
-		if(!inAir) {
-			this.upwardsSpeed = JUMP_POWER;
-			inAir = true;
-		}
-	}
-	
 	private void checkInputs() {
-		
 
 		if(Keyboard.isKeyDown(Keyboard.KEY_S)){
             this.currentSpeed = RUN_SPEED;
@@ -104,7 +111,7 @@ public class Player extends Entity{
 		
 		this.currentSpeed = -RUN_SPEED;
 		this.currentTurnSpeed = TURN_SPEED;
-		
+	
 	}
 	
 }

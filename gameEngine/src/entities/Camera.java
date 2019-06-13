@@ -9,9 +9,9 @@ public class Camera {
 	private float distanceFromPlayer = 50; //zoom da câmera
 	private float angleAroundPlayer = 0; //rotação da câmera
 	
-	private Vector3f position = new Vector3f(153,30,-200);
+	private Vector3f position = new Vector3f(444,30,-207);
     private float pitch = 20;
-    private float yaw ;
+    private float yaw = 0;
     private float roll;
     
     private Player player;
@@ -45,16 +45,30 @@ public class Camera {
         if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
             position.y= position.y - 1f;
         }
+      
+        System.out.println("posicao em x " +position.x);
+        System.out.println("posicao em y " +position.y);
+        System.out.println("posicao em z " +position.z);
+        System.out.println("roll  " +this.roll);
+        System.out.println("yaw " + this.yaw );
     }
     
     public void moveInThirdPerson() {   	
+    	
     	calculateZoom();
     	calculatePitch();
     	calculateAngleAroundPlayer();  
     	float hotizontalDistance = calculateHorizontalDistance();
     	float verticalDistance = calculateVerticalDistance();
-    	calculateCameraPosition(hotizontalDistance, verticalDistance);
-    	this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
+    	calculateThirdCameraPosition(hotizontalDistance, verticalDistance);
+    	this.yaw = 180 -  (player.getRotY() + angleAroundPlayer);
+    	
+    	System.out.println("posicao em x " +position.x);
+        System.out.println("posicao em y " +position.y);
+        System.out.println("posicao em z " +position.z);
+        System.out.println("roll  " +this.roll);
+        System.out.println("yaw " + this.yaw );
+    	
     }
      
     public Vector3f getPosition() {
@@ -73,7 +87,7 @@ public class Camera {
         return roll;
     }
     
-    private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
+    private void calculateThirdCameraPosition(float horizontalDistance, float verticalDistance) {
     	float theta = player.getRotY() + angleAroundPlayer;
     	float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
     	float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
@@ -81,7 +95,7 @@ public class Camera {
     	position.z = player.getPosition().z - offsetZ;
     	position.y = player.getPosition().y + verticalDistance;
     }
-    
+          
     private float calculateHorizontalDistance() {
     	return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
     }
@@ -109,6 +123,5 @@ public class Camera {
     		angleAroundPlayer = angleAroundPlayer - angleChange;
     		
     	}
-    }
-     
+    }   
 }

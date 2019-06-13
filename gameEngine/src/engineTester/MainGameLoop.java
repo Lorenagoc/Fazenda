@@ -26,6 +26,8 @@ public class MainGameLoop {
 
 	public static void main(String[] args) {
 		
+		/*Créditos para thinmatrix, principal fonte para a criação dessa cena*/
+		
 		DisplayManager.createDisplay();
 	    Loader loader = new Loader();
 	    
@@ -55,6 +57,10 @@ public class MainGameLoop {
 	    TextureModel bobble = new TextureModel(OBJLoader.loadObjModel("lowPolyTree", loader), new ModelTexture(loader.loadTexture("lowPolyTree")));
 	    TextureModel lamp = new TextureModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp")));
 	    TextureModel barn = new TextureModel(OBJLoader.loadObjModel("barn", loader), new ModelTexture(loader.loadTexture("barn")));
+	    TextureModel fence = new TextureModel(OBJLoader.loadObjModel("fence", loader), new ModelTexture(loader.loadTexture("fence")));
+	    TextureModel chicken = new TextureModel(OBJLoader.loadObjModel("chicken", loader), new ModelTexture(loader.loadTexture("chicken")));
+	    TextureModel house = new TextureModel(OBJLoader.loadObjModel("house", loader), new ModelTexture(loader.loadTexture("house")));
+	    TextureModel well = new TextureModel(OBJLoader.loadObjModel("well", loader), new ModelTexture(loader.loadTexture("well")));
 	    
 	    //----------------------------------------------------------------------------------------------------------------------------------------
 	    
@@ -88,7 +94,7 @@ public class MainGameLoop {
 	    }
 	        
 	    List<Light> lights = new ArrayList<Light>();
-	    lights.add(new Light(new Vector3f(2000,4000,2000), new Vector3f(1,1,1f)));//sol
+	    lights.add(new Light(new Vector3f(2000,4000,2000), new Vector3f(1.0f, 1.0f, 1.0f)));//sol
 	    lights.add(new Light(new Vector3f(185,10,-293), new Vector3f(2,0,0), new Vector3f(1, 0.1f, 0.002f)));
 	    lights.add(new Light(new Vector3f(380,10,-300), new Vector3f(0,2,2), new Vector3f(1, 0.1f, 0.002f)));
 	    lights.add(new Light(new Vector3f(293,10,-305), new Vector3f(2,2,0), new Vector3f(1, 0.1f, 0.002f)));
@@ -96,9 +102,34 @@ public class MainGameLoop {
 	    entities.add(new Entity(lamp, new Vector3f(185, 0, -293), 0, 0, 0, 1));
 	    entities.add(new Entity(lamp, new Vector3f(380, 0, -300), 0, 0, 0, 1));
 	    entities.add(new Entity(lamp, new Vector3f(293, 0, -305), 0, 0, 0, 1));
+	      
+	    entities.add(new Entity(barn, new Vector3f(293, 15, -360), 0, 100, 0, 5));
+	    
+	    entities.add(new Entity(house, new Vector3f(510, 0, -462), 0, 0, 0, 1));
+	    
+	    entities.add(new Entity(well, new Vector3f(492, 2, -462), 0, 0, 0, 2));
+	    
+	    entities.add(new Entity(chicken, new Vector3f(390, 0, -360), 0, 20, 0, 0.6f));
+	    entities.add(new Entity(chicken, new Vector3f(395, 0, -368), 0, 45, 0, 0.6f));
+	    entities.add(new Entity(chicken, new Vector3f(392, 0, -366), 0, 84, 0, 0.6f));
+	    entities.add(new Entity(chicken, new Vector3f(380, 0, -364), 0, 90, 0, 0.6f));
+	    entities.add(new Entity(chicken, new Vector3f(385, 0, -368), 0, 0, 0, 0.6f));
 	    
 	    
-	    entities.add(new Entity(barn, new Vector3f(293, 15, -305), 0, 100, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(456, -11,-245), 0, 0, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(442, -11,-245), 0, 0, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(471, -11,-251), 0, 59, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(429, -11,-254), 0, -63, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(459, -11,-312), 0, 0, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(445, -11,-312), 0, 0, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(425, -11,-272), 0, -90, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(425, -11,-287), 0, -90, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(425, -11,-302), 0, -90, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(434, -11,-309), 0, 26, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(476, -11,-267), 0, 90, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(476, -11,-281), 0, 90, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(476, -11,-295), 0, 90, 0, 5));
+	    entities.add(new Entity(fence, new Vector3f(466, -11,-310), 0, -67, 0, 5));
 	    
 	    
 	    Terrain terrain = new Terrain(-1,-1,loader, texturePack, blendMap);
@@ -109,21 +140,38 @@ public class MainGameLoop {
 	    RawModel sheepModel = OBJLoader.loadObjModel("sheep", loader);
 	    TextureModel stanfordSheep = new TextureModel(sheepModel, new ModelTexture(loader.loadTexture("sheep")));
 	    
-	    Player player = new Player(stanfordSheep, new Vector3f(153, 0, -274), 0, 100, 0, 5);
+	    Player playerMain = new Player(stanfordSheep, new Vector3f(444,30,-207), 0, 0, 0, 5);
+	    	    
+	    Camera camera = new Camera(playerMain);
+	   
+	    ArrayList<Player> curral = new ArrayList<>();
 	    
-	    
-	    Camera camera = new Camera(player);
-	    	       	    
+	    //aqui 5 ovelhas que pulam e rodam, são geradas
+	    for(int i = 0; i < 5 ; i++) {
+	    	Player player =  new Player(stanfordSheep, new Vector3f(random.nextInt(50) + 414, 0, random.nextInt(50) - 320), 0, 100, 0, 5);
+	    	curral.add(player);
+	    }
+	    	    	       	    
 	    while(!Display.isCloseRequested()){
 	    	
+	    	//pressionando a tecla "c" a câmera, que muda para o fazendeiro, pode ser controlada pelo mouse e o fazendeiro com as telcas w,a,s,d
+	    	//o zoom, quando a tecla c está pressionada, pode ser controlado pelo scroll do mouse
+	    	//se nada for pressionado a câmera volta para o modo mundo, onde pode ser controlada pelas setas do teclado
 	    	if(Keyboard.isKeyDown(Keyboard.KEY_C)) {
 	    		camera.moveInThirdPerson();
 	    	}else {
 	    		camera.move();
 	    	}
 	    	
-	        player.moveAuto(); 
-	        renderer.processEntity(player);
+	    	playerMain.move();
+	    	renderer.processEntity(playerMain);
+	    		    	
+	    	for(Player a : curral)
+	    		 	a.moveAuto(); 
+	    	
+	        for(Player a : curral)
+	        	renderer.processEntity(a);
+	        
 	        renderer.processTerrain(terrain);
 	        renderer.processTerrain(terrain2);
 	        
@@ -133,49 +181,9 @@ public class MainGameLoop {
 	        renderer.render(lights, camera);
 	        DisplayManager.updateDisplay();
 	    }
- 
-
-	 
+	    
 	    renderer.cleanUp();
 	    loader.cleanUp();
 	    DisplayManager.closeDisplay();
 	}
 }
-
-/*exemplo de main para renderizar vários cubos de maneira aleatória
- * 
- * public static void main(String[] args) {
-		
-		DisplayManager.createDisplay();
-		Loader loader = new Loader();
-		
-		RawModel model = OBJLoader.loadObjModel("ColourCube", loader);
-		TextureModel cubeModel = new TextureModel(model,new ModelTexture(loader.loadTexture("cube")));
-		Light light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
-		Camera camera = new Camera();
-		List<Entity> allCubes = new ArrayList<Entity>;
-		Random random = new Random;
-		
-		for(int i=0; i<200; i++){
-			float x = random.nextFloat()* 100 - 50;
-			float y = random.nextFloat()* 100 - 50;
-			float z = random.nextFloat()* -300;
-			allCubes.add(new Entity(cubeModel, new Vector3f(x,y,z), random.nextFloat() * 180f, random.nextFloat() * 180f,0f,1f));
-		}
-		
-		MasterRenderer renderer = new MasterRenderer();
-		
-		while(!Display.isCloseRequested()) {
-			camera.move();
-		
-			for(Entity cube:allCubes){
-				renderer.processEntity(cube);
-			}
-			
-			renderer.render(light, camera);
-			DisplayManager.updateDisplay();
-		}
-		renderer.cleanUp();
-		loader.cleanUp();
-		DisplayManager.closeDisplay();
-}*/

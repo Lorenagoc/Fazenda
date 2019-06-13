@@ -1,9 +1,0 @@
-./src/shaders/ShaderProgram.java
-./src/shaders/StaticShader.java
-./src/textures/ModelTexture.java
-./src/models/RawModel.java
-./src/models/TextureModel.java
-./src/engineTester/MainGameLoop.java
-./src/renderEngine/Renderer.java
-./src/renderEngine/Loader.java
-./src/renderEngine/DisplayManager.java
